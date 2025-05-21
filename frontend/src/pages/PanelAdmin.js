@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./PanelAdmin.css";
 
 const PanelAdmin = () => {
@@ -7,15 +8,20 @@ const PanelAdmin = () => {
     const [hora, setHora] = useState("");
     const [reservas, setReservas] = useState([]);
     const [mensaje, setMensaje] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!localStorage.getItem("auth")) {
+        navigate("/");
+        } else {
+        cargarReservas();
+        }
+    }, []);
 
     const cargarReservas = async () => {
         const res = await axios.get("http://localhost:5000/reservas");
         setReservas(res.data);
     };
-
-    useEffect(() => {
-        cargarReservas();
-    }, []);
 
     const reservar = async (e) => {
         e.preventDefault();
@@ -33,9 +39,20 @@ const PanelAdmin = () => {
         }
     };
 
+    const cerrarSesion = () => {
+        localStorage.removeItem("auth");
+        navigate("/");
+    };
+
     return (
         <div className="panel-container">
-        <h2>Panel de Administración</h2>
+        <div className="header">
+            <h2>Panel de Administración</h2>
+            <button className="cerrar-sesion" onClick={cerrarSesion}>
+            Cerrar sesión
+            </button>
+        </div>
+
         <form onSubmit={reservar}>
             <input
             type="date"
@@ -51,6 +68,7 @@ const PanelAdmin = () => {
             />
             <button type="submit">Apartar horario</button>
         </form>
+
         {mensaje && <p className="info">{mensaje}</p>}
 
         <h3>Horarios Apartados</h3>
@@ -74,6 +92,6 @@ const PanelAdmin = () => {
         </table>
         </div>
     );
-};
+    };
 
-export default PanelAdmin;
+    export default PanelAdmin;
