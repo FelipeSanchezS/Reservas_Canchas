@@ -68,5 +68,14 @@ def crear_reserva():
     db.session.commit()
     return jsonify({"success": True, "message": "Reserva creada exitosamente"})
 
+# Eliminar reserva
+@app.route('/cancelar/<int:reserva_id>', methods=['DELETE'])
+def cancelar_reserva(reserva_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM reservas WHERE id = %s", (reserva_id,))
+    mysql.connection.commit()
+    return jsonify({"success": True, "message": "Reserva cancelada"})
+
+
 if __name__ == '__main__':
     app.run(debug=True)
