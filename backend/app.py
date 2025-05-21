@@ -68,6 +68,17 @@ def crear_reserva():
     db.session.commit()
     return jsonify({"success": True, "message": "Reserva creada exitosamente"})
 
+    # Eliminar reserva
+@app.route('/reservas/<int:id>', methods=['DELETE'])
+def eliminar_reserva(id):
+    reserva = Reserva.query.get(id)
+    if not reserva:
+        return jsonify({"success": False, "message": "Reserva no encontrada"}), 404
+
+    db.session.delete(reserva)
+    db.session.commit()
+    return jsonify({"success": True, "message": "Reserva eliminada exitosamente"})
+
 
 
 if __name__ == '__main__':
