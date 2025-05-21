@@ -2,8 +2,6 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
-import mysql.connector
-from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app)
@@ -70,13 +68,6 @@ def crear_reserva():
     db.session.commit()
     return jsonify({"success": True, "message": "Reserva creada exitosamente"})
 
-# Eliminar reserva
-@app.route('/cancelar/<int:reserva_id>', methods=['DELETE'])
-def cancelar_reserva(reserva_id):
-    cursor = mysql.connection.cursor()
-    cursor.execute("DELETE FROM reservas WHERE id = %s", (reserva_id,))
-    mysql.connection.commit()
-    return jsonify({"success": True, "message": "Reserva cancelada"})
 
 
 if __name__ == '__main__':
