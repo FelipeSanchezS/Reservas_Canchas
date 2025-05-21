@@ -78,6 +78,7 @@ const PanelAdmin = () => {
                 <th>Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
+                <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -86,6 +87,20 @@ const PanelAdmin = () => {
                 <td>{r.fecha}</td>
                 <td>{r.hora}</td>
                 <td>{r.estado}</td>
+                <td>
+                    <button class="eliminar"
+                    onClick={async () => {
+                        try {
+                        await axios.delete(`http://localhost:5000/reservas/${r.id}`);
+                        cargarReservas();
+                        } catch (error) {
+                        setMensaje("Error al eliminar la reserva");
+                        }
+                    }}
+                    >
+                    Eliminar
+                    </button>
+                </td>
                 </tr>
             ))}
             </tbody>

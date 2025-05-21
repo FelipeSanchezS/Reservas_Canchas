@@ -75,3 +75,16 @@ body {
   font-family: Arial, sans-serif;
   background-color: #e0f3f2;
 }
+
+.eliminar {
+  background-color: #ec6363;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.eliminar:hover {
+  background-color: #c62828;
+}
