@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-import os
+from app import db
+db.create_all()
 
 app = Flask(__name__)
 CORS(app)
@@ -18,22 +19,43 @@ class Admin(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
 
+class Cancha(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    tipo = db.Column(db.String(20), nullable=False)  # Fútbol 5 o Fútbol 7
+
 class Reserva(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fecha = db.Column(db.String(10), nullable=False)  # Ej: "2025-05-20"
-    hora = db.Column(db.String(5), nullable=False)    # Ej: "15:00"
+    fecha = db.Column(db.String(10), nullable=False)  # Formato YYYY-MM-DD
+    hora = db.Column(db.String(5), nullable=False)    # Formato HH:MM
     estado = db.Column(db.String(20), default="apartada")
+    cancha_id = db.Column(db.Integer, db.ForeignKey('cancha.id'), nullable=False)
+    cancha = db.relationship('Cancha', backref='reservas', lazy=True)
 
-# Crear tablas e insertar admin por defecto
+# Crear tablas e insertar datos por defecto
 @app.before_request
 def inicializar_db():
     db.create_all()
+
+    # Insertar canchas si no existen
+    if Cancha.query.count() == 0:
+        canchas = [
+            Cancha(nombre="Cancha F5 - A", tipo="Fútbol 5", jugadores=10),
+            Cancha(nombre="Cancha F5 - B", tipo="Fútbol 5", jugadores=10),
+            Cancha(nombre="Cancha F5 - C", tipo="Fútbol 5", jugadores=10),
+            Cancha(nombre="Cancha F7 - A", tipo="Fútbol 7", jugadores=14),
+            Cancha(nombre="Cancha F7 - B", tipo="Fútbol 7", jugadores=14),
+        ]
+        db.session.add_all(canchas)
+        db.session.commit()
+
+    # Insertar administrador por defecto
     if not Admin.query.filter_by(username='admin').first():
         admin = Admin(username='admin', password='admin123')
         db.session.add(admin)
         db.session.commit()
 
-# Endpoint login
+# Endpoint: login de administrador
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -42,33 +64,39 @@ def login():
         return jsonify({"success": True})
     return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
 
-# Ver reservas
+# Endpoint: obtener todas las reservas
 @app.route('/reservas', methods=['GET'])
 def get_reservas():
     reservas = Reserva.query.all()
     return jsonify([
-        {"id": r.id, "fecha": r.fecha, "hora": r.hora, "estado": r.estado}
-        for r in reservas
+        {
+            "id": r.id,
+            "fecha": r.fecha,
+            "hora": r.hora,
+            "estado": r.estado,
+            "cancha_id": r.cancha.id,
+            "cancha_nombre": r.cancha.nombre
+        } for r in reservas
     ])
 
-# Crear reserva
+# Endpoint: crear nueva reserva
 @app.route('/reservar', methods=['POST'])
 def crear_reserva():
     data = request.json
     fecha = data['fecha']
     hora = data['hora']
+    cancha_id = data['cancha_id']
 
-    # Verificar si ya existe reserva en esa fecha y hora
-    existente = Reserva.query.filter_by(fecha=fecha, hora=hora).first()
+    existente = Reserva.query.filter_by(fecha=fecha, hora=hora, cancha_id=cancha_id).first()
     if existente:
-        return jsonify({"success": False, "message": "Horario ya reservado"}), 400
+        return jsonify({"success": False, "message": "Ese horario ya está reservado para esta cancha"}), 400
 
-    nueva = Reserva(fecha=fecha, hora=hora)
+    nueva = Reserva(fecha=fecha, hora=hora, cancha_id=cancha_id)
     db.session.add(nueva)
     db.session.commit()
     return jsonify({"success": True, "message": "Reserva creada exitosamente"})
 
-    # Eliminar reserva
+# Endpoint: eliminar reserva
 @app.route('/reservas/<int:id>', methods=['DELETE'])
 def eliminar_reserva(id):
     reserva = Reserva.query.get(id)
@@ -79,7 +107,14 @@ def eliminar_reserva(id):
     db.session.commit()
     return jsonify({"success": True, "message": "Reserva eliminada exitosamente"})
 
-
+# Endpoint: obtener lista de canchas
+@app.route('/canchas', methods=['GET'])
+def get_canchas():
+    canchas = Cancha.query.all()
+    return jsonify([
+        {"id": c.id, "nombre": c.nombre, "tipo": c.tipo, "jugadores": c.jugadores}
+        for c in canchas
+    ])
 
 if __name__ == '__main__':
     app.run(debug=True)
