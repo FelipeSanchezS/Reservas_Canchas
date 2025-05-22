@@ -1,8 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from app import db
-db.create_all()
+#from app import db
 
 app = Flask(__name__)
 CORS(app)
@@ -32,6 +31,10 @@ class Reserva(db.Model):
     cancha_id = db.Column(db.Integer, db.ForeignKey('cancha.id'), nullable=False)
     cancha = db.relationship('Cancha', backref='reservas', lazy=True)
 
+# Crear base de datos
+with app.app_context():
+    db.create_all()
+
 # Crear tablas e insertar datos por defecto
 @app.before_request
 def inicializar_db():
@@ -40,11 +43,11 @@ def inicializar_db():
     # Insertar canchas si no existen
     if Cancha.query.count() == 0:
         canchas = [
-            Cancha(nombre="Cancha F5 - A", tipo="Fútbol 5", jugadores=10),
-            Cancha(nombre="Cancha F5 - B", tipo="Fútbol 5", jugadores=10),
-            Cancha(nombre="Cancha F5 - C", tipo="Fútbol 5", jugadores=10),
-            Cancha(nombre="Cancha F7 - A", tipo="Fútbol 7", jugadores=14),
-            Cancha(nombre="Cancha F7 - B", tipo="Fútbol 7", jugadores=14),
+            Cancha(nombre="Cancha F5 - A", tipo="Fútbol 5"),
+            Cancha(nombre="Cancha F5 - B", tipo="Fútbol 5"),
+            Cancha(nombre="Cancha F5 - C", tipo="Fútbol 5"),
+            Cancha(nombre="Cancha F7 - A", tipo="Fútbol 7"),
+            Cancha(nombre="Cancha F7 - B", tipo="Fútbol 7"),
         ]
         db.session.add_all(canchas)
         db.session.commit()
@@ -112,7 +115,7 @@ def eliminar_reserva(id):
 def get_canchas():
     canchas = Cancha.query.all()
     return jsonify([
-        {"id": c.id, "nombre": c.nombre, "tipo": c.tipo, "jugadores": c.jugadores}
+        {"id": c.id, "nombre": c.nombre, "tipo": c.tipo}
         for c in canchas
     ])
 
