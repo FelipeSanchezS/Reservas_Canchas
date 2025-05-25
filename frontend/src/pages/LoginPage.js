@@ -29,23 +29,23 @@ const LoginPage = () => {
 
     return (
         <div className="login-container">
-        <h2>Iniciar sesión</h2>
-        <form onSubmit={handleLogin}>
-            <input
-            type="text"
-            placeholder="Usuario"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit">Ingresar</button>
-            {mensaje && <p className="error">{mensaje}</p>}
-        </form>
+            <h2>Iniciar sesión</h2>
+            <form onSubmit={handleLogin}>
+                <input
+                type="text"
+                placeholder="Usuario"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                type="password"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                />
+                <button type="submit">Ingresar</button>
+                {mensaje && <p className="error">{mensaje}</p>}
+            </form>
         </div>
     );
     };
