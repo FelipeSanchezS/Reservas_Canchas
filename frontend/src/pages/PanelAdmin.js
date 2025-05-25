@@ -52,9 +52,12 @@ const PanelAdmin = () => {
                 cargarReservas();
             }
         } catch (error) {
-            setMensaje(error.response?.data?.message || "Error al crear la reserva");
+            const errorMsg = error.response?.data?.message || "Error al crear la reserva";
+            setMensaje(errorMsg);
+            window.alert(errorMsg); // <-- esta línea lanza la ventana emergente
         }
     };
+
 
     const cerrarSesion = () => {
         localStorage.removeItem("auth");
