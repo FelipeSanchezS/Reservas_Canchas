@@ -42,6 +42,7 @@ button:hover {
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
+  margin-bottom: 20px;
 }
 
 .cerrar-sesion:hover {
@@ -73,7 +74,8 @@ h2{
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #e0f3f2;
+  background: #333333;
+  background: linear-gradient(90deg, rgb(14, 14, 14) 0%, rgb(27, 27, 27) 100%);
 }
 
 .eliminar {

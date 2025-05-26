@@ -1,8 +1,9 @@
+
 .container{
     display: flex;
     flex-direction: column;
     /*justify-content: center;*/
-    background-color: #ffffff;
+    background-color: #3d3d3d;
     margin: auto;
     margin-top: 80px;
     padding-bottom: 35px;
@@ -20,14 +21,14 @@
 }
 
 .text{
-    color: #f53e3e;
-    font-size: 38px;
+    color: #ffffff;
+    font-size: 30px;
     font-weight: 700;
 }
 
 .underline{
     color: #f53e3e;
-    width: 61px;
+    width: 91px;
     height: 6px;
     background-color: #f53e3e;
     border-radius: 9px;
@@ -38,7 +39,7 @@
     display: flex;
     flex-direction: column;
     /* align-items: center; */
-    gap: 20px;
+    gap: 16px;
     /* width: 100%; */
 }
 
@@ -46,11 +47,12 @@
     display: flex;
     align-items: center;
     margin: auto;
-    width: 350px;
-    height: 45px;
-    background: #eaeaea;
+    width: 320px;
+    height: 40px;
+    background: #7a7a7a;
     border-radius: 10px;
 }
+
 
 .input img{
     margin: 0px 30px;
@@ -63,7 +65,7 @@
     border: none;
     outline: none;
     font-size: 15px;
-    color: #000000;
+    color: #ffffff;
 }   
 
 .submit-container{
@@ -76,10 +78,25 @@
 .submit{
     width: 240px;
     height: 40px;
-    background: #f53e3e;
+    background: #f3f3f3;
     border-radius: 10px;
-    color: #ffffff;
+    color: #000000;
     font-size: 19px;
     font-weight: 700;
     border: none;
+}
+
+.submit:hover{
+    background: #000000;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+p{
+    color: #ffffff;
+    font-size: 15px;
+    margin-top: 6px;
+    font-weight: 700;
+    text-align: start;
+    padding-left: 40px;
 }
