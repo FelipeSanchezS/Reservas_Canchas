@@ -25,6 +25,10 @@ const LoginPage1 = () => {
                     <input type="text" placeholder="Contraseña" />
                 </div>
             </div>
+            <div className="submit-container">  
+                <button className="submit">Ingresar</button>
+                <button className="submit">Registrarse</button>
+            </div>
         </div>
     );
 }
