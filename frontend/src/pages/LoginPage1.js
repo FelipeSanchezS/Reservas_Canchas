@@ -1,8 +1,8 @@
 import react from "react";
-import user_icon from "../assets/user-icon.png";
-import email_icon from "../assets/email-icon.png";
-import password_icon from "../assets/password-icon.png";
-import "./LoginPage1.css";
+import person from "../Components/Assets/person.png";
+import email from "../Components/Assets/email.png";
+import password from "../Components/Assets/password.png";
+
 
 const LoginPage1 = () => {
     return (
@@ -13,15 +13,15 @@ const LoginPage1 = () => {
             </div>
             <div className="inputs">
                 <div className="input">
-                    <img src={email_icon} alt=""/>
+                    <img src={email} alt=""/>
                     <input type="email" placeholder="Email" />
                 </div>
                 <div className="input">
-                        <img src={user_icon} alt=""/>
+                        <img src={person} alt=""/>
                         <input type="text" placeholder="Usuario" />
                 </div>
                 <div className="input">
-                    <img src={password_icon} alt=""/>
+                    <img src={password} alt=""/>
                     <input type="text" placeholder="Contraseña" />
                 </div>
             </div>
